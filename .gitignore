@@ -11,6 +11,7 @@
 !vercel.json
 !manifest.json
 !sw.js
+!README.md
 
 # Ignore minimax folder
 .minimax/
