@@ -6,6 +6,8 @@
 !index.html
 !app.js
 !styles.css
+!_headers
+!_redirects
 
 # Ignore minimax folder
 .minimax/
