@@ -8,6 +8,9 @@
 !styles.css
 !_headers
 !_redirects
+!vercel.json
+!manifest.json
+!sw.js
 
 # Ignore minimax folder
 .minimax/
