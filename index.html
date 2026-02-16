@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GeekMind - 想法记录</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 认证界面 -->
+    <div id="auth-view" class="view active">
+        <div class="auth-container">
+            <div class="logo">
+                <span class="prompt">&gt;_</span>
+                <h1>GeekMind</h1>
+            </div>
+            <p class="tagline">记录每一个灵感瞬间</p>
+            
+            <!-- 登录表单 -->
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="login-email">邮箱</label>
+                    <input type="email" id="login-email" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">登录</button>
+                <p class="switch-mode">
+                    还没有账号? <a href="#" id="show-register">注册</a>
+                </p>
+            </form>
+            
+            <!-- 注册表单 -->
+            <form id="register-form" class="auth-form hidden">
+                <div class="form-group">
+                    <label for="register-email">邮箱</label>
+                    <input type="email" id="register-email" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">密码</label>
+                    <input type="password" id="register-password" placeholder="至少6位" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">确认密码</label>
+                    <input type="password" id="register-confirm" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">注册</button>
+                <p class="switch-mode">
+                    已有账号? <a href="#" id="show-login">登录</a>
+                </p>
+            </form>
+            
+            <div id="auth-error" class="error-message hidden"></div>
+        </div>
+    </div>
+
+    <!-- 主应用界面 -->
+    <div id="app-view" class="view">
+        <!-- 顶部导航 -->
+        <header class="app-header">
+            <div class="header-left">
+                <span class="logo-small">&gt;_</span>
+                <span class="app-title">GeekMind</span>
+            </div>
+            <div class="header-right">
+                <div class="view-toggle">
+                    <button class="toggle-btn active" data-view="timeline" title="时间轴视图">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+</button>
+                    <button class="toggle-btn" data-view="board" title="看板视图">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="18" rx="1"></rect>
+                            <rect x="14" y="3" width="7" height="10" rx="1"></rect>
+                            <rect x="14" y="17" width="7" height="4" rx="1"></rect>
+                        </svg>
+                    </button>
+                </div>
+                <button id="logout-btn" class="btn-icon" title="退出登录">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- 输入区域 -->
+        <div class="input-area">
+            <div class="input-container">
+                <textarea id="thought-input" placeholder="记录你的想法... (支持 Markdown)" rows="1"></textarea>
+                <div class="input-actions">
+                    <button id="voice-btn" class="btn-icon" title="语音输入">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                    <button id="submit-btn" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+            <div id="voice-indicator" class="voice-indicator hidden">
+                <span class="pulse"></span>
+                <span>正在录音...</span>
+                <span id="voice-text"></span>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <main class="content-area">
+            <!-- 时间轴视图 -->
+            <div id="timeline-view" class="view-content active">
+                <div class="timeline" id="timeline"></div>
+            </div>
+            
+            <!-- 看板视图 -->
+            <div id="board-view" class="view-content">
+                <div class="kanban-board" id="kanban-board">
+                    <div class="kanban-column" data-status="idea">
+                        <div class="column-header">
+                            <span class="column-dot idea"></span>
+                            <span>想法</span>
+                            <span class="column-count" id="count-idea">0</span>
+                        </div>
+                        <div class="column-cards" id="column-idea"></div>
+                    </div>
+                    <div class="kanban-column" data-status="todo">
+                        <div class="column-header">
+                            <span class="column-dot todo"></span>
+                            <span>待办</span>
+                            <span class="column-count" id="count-todo">0</span>
+                        </div>
+                        <div class="column-cards" id="column-todo"></div>
+                    </div>
+                    <div class="kanban-column" data-status="done">
+                        <div class="column-header">
+                            <span class="column-dot done"></span>
+                            <span>完成</span>
+                            <span class="column-count" id="count-done">0</span>
+                        </div>
+                        <div class="column-cards" id="column-done"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 编辑弹窗 -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑想法</h3>
+                <button class="btn-close" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="edit-content" rows="6"></textarea>
+                <div class="edit-status">
+                    <label>状态:</label>
+                    <select id="edit-status">
+                        <option value="idea">想法</option>
+                        <option value="todo">待办</option>
+                        <option value="done">完成</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-edit">取消</button>
+                <button class="btn btn-primary" id="save-edit">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载动画 -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>

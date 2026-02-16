@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+# But not these files
+!.gitignore
+!index.html
+!app.js
+!styles.css
+
+# Ignore minimax folder
+.minimax/
